@@ -1,3 +1,4 @@
+package lab3;
 
 public class BusStop extends NodeObject {
 

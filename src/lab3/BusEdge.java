@@ -1,4 +1,4 @@
-
+package lab3;
 /**
 * Extends an Edge with a weight and a name for the bus line.
 */

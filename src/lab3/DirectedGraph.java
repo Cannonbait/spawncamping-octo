@@ -1,4 +1,4 @@
-
+package lab3;
 import java.util.*;
 
 public class DirectedGraph<E extends Edge> {

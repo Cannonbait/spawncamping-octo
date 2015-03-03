@@ -1,23 +1,28 @@
 package lab3;
+
 import java.util.*;
 
 public class DirectedGraph<E extends Edge> {
-
+        private List<E> edges;
+        private final int number;
 
 	public DirectedGraph(int noOfNodes) {
-		;
+            number = noOfNodes;
+            edges = new ArrayList<>();
 	}
 
 	public void addEdge(E e) {
-		;
+            edges.add(e);
 	}
 
 	public Iterator<E> shortestPath(int from, int to) {
-		return null;
+            CompDijkstraPath dijkstra = new CompDijkstraPath(edges);
+            return dijkstra.getShortest(from, to);
 	}
 		
 	public Iterator<E> minimumSpanningTree() {
-		return null;
+            CompKruskalEdge kruskal = new CompKruskalEdge(edges);
+            return kruskal.getMinimumSpanningTree();
 	}
 
 }

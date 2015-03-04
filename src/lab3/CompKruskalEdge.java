@@ -13,8 +13,8 @@ public class CompKruskalEdge<E extends Edge> {
     private final List<E>[] nodes;
     private final PriorityQueue<E> queue;
     
-    public CompKruskalEdge(int size, List<E> edges){
-        this.size = size;
+    public CompKruskalEdge(List<E> edges){
+        this.size = edges.size();
         queue = new PriorityQueue<>(edges.size(), new edgeComparator());
         nodes = new List[size];
         for (int i = 0; i < size; i++){
@@ -26,7 +26,7 @@ public class CompKruskalEdge<E extends Edge> {
     }
     
     public Iterator<E> getMinimumSpanningTree(){
-        while (!queue.isEmpty() || nodes[0].size() < size){
+        while ((!queue.isEmpty())){
             E nextEdge = queue.poll();
             final int source = nextEdge.getSource();
             final int dest = nextEdge.getDest();
@@ -37,6 +37,8 @@ public class CompKruskalEdge<E extends Edge> {
                         nodes[edge.getSource()] = nodes[dest];
                         nodes[edge.getDest()] = nodes[dest];
                     }
+                    nodes[dest].add(nextEdge);
+                    nodes[source] = nodes[dest];
                     
                 } else {
                     for (E edge:nodes[dest]){
@@ -44,11 +46,12 @@ public class CompKruskalEdge<E extends Edge> {
                         nodes[edge.getSource()] = nodes[source];
                         nodes[edge.getDest()] = nodes[source];
                     }
+                    nodes[source].add(nextEdge);
+                    nodes[dest] = nodes[source];
                 }
-                nodes[dest].add(nextEdge);
             }
         }
-        return queue.iterator();
+        return nodes[0].iterator();
     }
 
 }

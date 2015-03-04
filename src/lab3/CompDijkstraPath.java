@@ -22,6 +22,7 @@ public class CompDijkstraPath<E extends Edge> {
     }
     
     public Iterator<E> getShortest(int from, int to){
+        //Put all edges that originate in the starting node in our list.
         for (E edge:edges){
             if (edge.getSource() == from){
                 List<E> path = new ArrayList<>();
@@ -29,16 +30,16 @@ public class CompDijkstraPath<E extends Edge> {
                 queue.add(new QueueElement(edge, path));
             }
         }
-        visited.add(from);
-        
+        visited.add(from); /
+        //As long as we have edges to go through
         while (!queue.isEmpty()){
             QueueElement next = queue.poll();
-            final int newNode = next.getDest();
-            if (!visited.contains(newNode)){
+            final int newNode = next.getDest(); //The node we originate our search from
+            if (!visited.contains(newNode)){ //If we haven't already visited this node
                 visited.add(newNode);
-                if (next.getDest() == to){
+                if (next.getDest() == to){ //If this is the node we are traveling to we are done, return the path
                     return next.getPath().iterator();
-                } else {  
+                } else {  //Loop through all edges and add the ones that point to a node we haven't visited and originates in the node we originated from
                     for (E edge:edges){
                         if (!visited.contains(edge.getDest()) && edge.getSource() == newNode){
                             List<E> oldPath = (List<E>)next.getPath();
@@ -49,10 +50,14 @@ public class CompDijkstraPath<E extends Edge> {
                 }   
             }   
         }
-        return null;
+        return null; //There is no path from the node 'from' to the node 'to'
     }
 }
 
+/**
+ * Contains an edge and the path we took to get to this edge
+ * @param <E>
+ */
 class QueueElement<E extends Edge> implements Comparable<QueueElement>{
     private final E edge;
     private final List<E> path;
@@ -62,6 +67,10 @@ class QueueElement<E extends Edge> implements Comparable<QueueElement>{
         this.path = new ArrayList<>(path);
     }
 
+    /**
+     * Compares the weight of of the paths of 2 queueelements
+     * @param toCompare the queueelement to compare to
+     */
     @Override
     public int compareTo(QueueElement toCompare) {
         if (this.getWeight() < toCompare.getWeight()){
@@ -72,7 +81,10 @@ class QueueElement<E extends Edge> implements Comparable<QueueElement>{
             return 1;
         }
     }
-    
+
+    /**
+     * Returns the weight of the path we took to this edge
+     */
     private double getWeight(){
         double totalWeight = 0;
         for (E edge:path){

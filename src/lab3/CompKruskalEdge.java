@@ -25,32 +25,52 @@ public class CompKruskalEdge<E extends Edge> {
         }
     }
     
+    /**
+     * This algorithm assumes that the list of edges given in constructor spans a complete spanning tree
+     * @return 
+     */
     public Iterator<E> getMinimumSpanningTree(){
+        //Aslong as we still have edges in the queue and we do not have a list containing all nodes
         while (!queue.isEmpty() && nodes[0].size() < size-1){
+            //Get next edge
             E nextEdge = queue.poll();
+            //Store the source and destination number
             final int source = nextEdge.getSource();
             final int dest = nextEdge.getDest();
+            //If the source and destination does not point to the same list
             if (nodes[source] != nodes[dest]){
+                //If the source list is smaller than the dest list
                 if (nodes[source].size() < nodes[dest].size()){
+                    //Loop over all the edges in source list
                     for (E edge:nodes[source]){
+                        //Add the edge to the dest
                         nodes[dest].add(edge);
+                        //Update what list the edges nodes point to
                         nodes[edge.getSource()] = nodes[dest];
                         nodes[edge.getDest()] = nodes[dest];
                     }
+                    //Add the new edge to the list found at dest
                     nodes[dest].add(nextEdge);
+                    //Set the source node to point to the dest edge list
                     nodes[source] = nodes[dest];
-                    
+                //If the source list is bigger than the dest list
                 } else {
+                    //Loop over all the edges in the dest list
                     for (E edge:nodes[dest]){
+                        //Add the edge to the source
                         nodes[source].add(edge);
+                        //Update what list the edges nodes point to
                         nodes[edge.getSource()] = nodes[source];
                         nodes[edge.getDest()] = nodes[source];
                     }
+                    //Add the new edge to the list found at source
                     nodes[source].add(nextEdge);
+                    //Set the dest node to point to the source edge list
                     nodes[dest] = nodes[source];
                 }
             }
         }
+        //Return an iterator from the list of edges that node 0 points to.
         return nodes[0].iterator();
     }
 

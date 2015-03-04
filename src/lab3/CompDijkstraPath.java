@@ -33,14 +33,14 @@ public class CompDijkstraPath<E extends Edge> {
         
         while (!queue.isEmpty()){
             QueueElement next = queue.poll();
-            final int dest = next.getDest();
-            if (!visited.contains(dest)){
+            final int newNode = next.getDest();
+            if (!visited.contains(newNode)){
+                visited.add(newNode);
                 if (next.getDest() == to){
                     return next.getPath().iterator();
-                } else {
-                    visited.add(dest);
+                } else {  
                     for (E edge:edges){
-                        if (!visited.contains(edge.getDest()) && edge.getSource() == dest){
+                        if (!visited.contains(edge.getDest()) && edge.getSource() == newNode){
                             List<E> oldPath = (List<E>)next.getPath();
                             oldPath.add(edge);
                             queue.add(new QueueElement(edge, oldPath));
@@ -64,9 +64,9 @@ class QueueElement<E extends Edge> implements Comparable<QueueElement>{
 
     @Override
     public int compareTo(QueueElement toCompare) {
-        if (edge.getWeight() < toCompare.getWeight()){
+        if (this.getWeight() < toCompare.getWeight()){
             return -1;
-        } else if (edge.getWeight() == toCompare.getWeight()){
+        } else if (this.getWeight() == toCompare.getWeight()){
             return 0;
         } else {
             return 1;

@@ -73,16 +73,12 @@ class QueueElement<E extends Edge> implements Comparable<QueueElement>{
         }
     }
     
-    public double getWeight(){
+    private double getWeight(){
         double totalWeight = 0;
         for (E edge:path){
             totalWeight += edge.getWeight();
         }
         return totalWeight;
-    }
-    
-    public int getSource(){
-        return edge.getSource();
     }
 
     public int getDest(){
@@ -91,10 +87,6 @@ class QueueElement<E extends Edge> implements Comparable<QueueElement>{
     
     public List<E> getPath(){
         return new ArrayList<E>(path);
-    }
-    
-    public E getEdge(){
-        return edge;
     }
 }
 

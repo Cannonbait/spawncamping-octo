@@ -30,7 +30,7 @@ public class CompDijkstraPath<E extends Edge> {
                 queue.add(new QueueElement(edge, path));
             }
         }
-        visited.add(from); /
+        visited.add(from); 
         //As long as we have edges to go through
         while (!queue.isEmpty()){
             QueueElement next = queue.poll();

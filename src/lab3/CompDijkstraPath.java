@@ -8,40 +8,46 @@ import java.util.PriorityQueue;
 
 
 public class CompDijkstraPath<E extends Edge> {
-    private final int size;
     private final PriorityQueue<QueueElement> queue;
     private final List<E> edges;
-    private final List<Integer> visited;
-    
-    public CompDijkstraPath(List<E> edges){
-        size = edges.size();
-        queue = new PriorityQueue(size-1);
+    private final Boolean[] visited;
+    private List<E>[] EL;
+
+    public CompDijkstraPath(List<E> edges, int numberOfNodes){
         this.edges = edges;
-        visited = new ArrayList<>();
-        
+        queue = new PriorityQueue(edges.size() - 1);
+        visited = new Boolean[numberOfNodes];
+        EL = new List[numberOfNodes];
+
+        for(int i = 0; i < numberOfNodes; ++i) {
+            visited[i] = false;
+            EL[i] = new ArrayList();
+        }
+        //Construct EL
+        for(E edge : edges) {
+            EL[edge.from].add(edge);
+        }
     }
     
     public Iterator<E> getShortest(int from, int to){
         //Put all edges that originate in the starting node in our list.
-        for (E edge:edges){
-            if (edge.getSource() == from){
-                List<E> path = new ArrayList<>();
-                path.add(edge);
-                queue.add(new QueueElement(edge, path));
-            }
+        for (E edge:EL[from]){
+            List<E> path = new ArrayList<>();
+            path.add(edge);
+            queue.add(new QueueElement(edge, path));
         }
-        visited.add(from); 
+        visited[from] = true;
         //As long as we have edges to go through
         while (!queue.isEmpty()){
             QueueElement next = queue.poll();
             final int newNode = next.getDest(); //The node we originate our search from
-            if (!visited.contains(newNode)){ //If we haven't already visited this node
-                visited.add(newNode);
+            if (!visited[newNode]){ //If we haven't already visited this node
+                visited[newNode] = true;
                 if (next.getDest() == to){ //If this is the node we are traveling to we are done, return the path
                     return next.getPath().iterator();
-                } else {  //Loop through all edges and add the ones that point to a node we haven't visited and originates in the node we originated from
-                    for (E edge:edges){
-                        if (!visited.contains(edge.getDest()) && edge.getSource() == newNode){
+                } else {  //Loop through all edges that originate in this node and add the ones that point to a node we haven't visited.
+                    for (E edge:EL[newNode]){
+                        if (!visited[edge.getDest()] && edge.getSource() == newNode){
                             List<E> oldPath = (List<E>)next.getPath();
                             oldPath.add(edge);
                             queue.add(new QueueElement(edge, oldPath));
